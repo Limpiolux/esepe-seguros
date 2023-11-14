@@ -1,70 +1,60 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Esepe Seguros
 
-## Available Scripts
+En el área de sistemas desarrollamos una Landing Page para [Esepe Seguros](https://seguros.esepe.com.ar/) con un formulario de contacto que se conecta a una lista de Sharepoint. 
 
-In the project directory, you can run:
+Primero desarrollamos el Front End con React, Tailwind y NextUI. Despues hicimos el Back End con Power Automate y Sharepoint e hicimos la conexión entre el Front y Back.
 
-### `npm start`
+## Sharepoint 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Usamos Sharepoint para guardar la información que nos envían desde el Front End para que posteriormente Esepe Seguros los contacte y le ofrezcan un plan de seguro. 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Creamos un sitio de Sharepoint y una lista, al crearlos, conseguimos un endpoint para enviar un nuestra información con un método POST:
 
-### `npm test`
+```https://limpiolux.sharepoint.com/sites/ESEPESeguros/_api/web/lists/GetByTitle('ESEPE')/items```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![Endpoint](images/endpoint.png)
 
-### `npm run build`
+Ya con esto podemos crear un desencadenador de flujo en Power Automate llamado "Cuando se recibe una solicitud HTTP" para recibir un JSON con toda la información de contacto, para despues enviarlo al endpoint de Sharepoint.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Información solicitada
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+El formulario pide información obligatoria para poder enviarla a la lista de Sharepoint en formato JSON, esta información es:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Nombre y Apellido
+2. DNI
+3. Email
+4. Número telefónico
+5. Año de patentamiento del vehículo
+6. Marca y modelo del vehículo
+7. ¿Tiene GNC? 
+8. ¿Su auto es de uso particular? 
+9. Código postal
+10. Localidad
+11. Código de empresa (Opcional)
 
-### `npm run eject`
+Despues de llenar todos estos campos, te va a pedir que soluciones un reCaptcha de Google. 
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Instalación
+ 
+Para instalarlo en un ambiente de producción con Docker, lo tenes que subir al servidor y ejecutar estos dos comandos: 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```docker build -t esepe-seguro .```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```docker run -p 8002:8002 -d esepe-seguro```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Ya con esos dos comandos ya estaría andando en el Localhost en el puerto 8002.
 
-## Learn More
+Tambien necesitamos configurar el Power Automate y crear la lista de Sharepoint.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Screenshots
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![Screenshot1](images/screenshot1.png)
 
-### Code Splitting
+![Screenshot2](images/screenshot2.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
